@@ -45,5 +45,9 @@ while x < num_rows:
     data2.ix[x, 'Date'] = dateconv(x)
     x += 1
 
+#converts 12hr format to mil time
+def timeconv(time):
+    return str(pd.datetime.strptime(data2['Time'][time], '%I:%M:%S %p').time())
+
 test = pd.DataFrame(data2)
 test.to_csv('test2.csv', index=False, na_rep = 'null' )
