@@ -28,14 +28,12 @@ print(list(data2))
 data2.fillna(value = 'NULL',inplace=True)
 
 #change yes/no to boolean 1/0                         PROBLEM RETURNS A DOUBLE INSTEAD OF INT IN CONSOLE BUT NOT EXCEL??
-bloodanaly = {'Yes': 1, 'No': 0}
-data2['Blood\nAnalysis'] = data2['Blood\nAnalysis'].map(bloodanaly)
+aboolean = {'Yes': 1, 'No': 0}
+data2['Blood\nAnalysis'] = data2['Blood\nAnalysis'].map(aboolean)
 
-imageanaly = {'Yes': 1, 'No': 0}
-data2['Image\nAnalysis'] = data2['Image\nAnalysis'].map(imageanaly)
+data2['Image\nAnalysis'] = data2['Image\nAnalysis'].map(aboolean)
 
-produc = {'Yes': 1, 'No': 0}
-data2['C11/F18\nproduction'] = data2['C11/F18\nproduction'].map(produc)
+data2['C11/F18\nproduction'] = data2['C11/F18\nproduction'].map(aboolean)
 
 #converting date
 def dateconv(date):
