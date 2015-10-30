@@ -2,8 +2,7 @@ import pandas as pd
 __author__ = 'jphan'
 
 #read in excel file
-# data = pd.read_csv("RADIOPHARM log - Summary-mod.csv")
-data = pd.read_csv("RADIOPHARM log - Summary-mod_debug.csv")
+data = pd.read_csv("RADIOPHARM log - Summary-mod.csv")
 
 #get number of rows
 num_rows = len(data)
@@ -28,16 +27,15 @@ print(list(data2))
 #fills in empty cells
 data2.fillna(value = 'NULL',inplace=True)
 
-# print(data2['ID'][12])
-# print(data2['ID'][14])
+#change yes/no to boolean 1/0                         PROBLEM RETURNS A DOUBLE INSTEAD OF INT IN CONSOLE BUT NOT EXCEL??
+bloodanaly = {'Yes': 1, 'No': 0}
+data2['Blood\nAnalysis'] = data2['Blood\nAnalysis'].map(bloodanaly)
 
-# print(list(data2['SUBJECT'][0]))
-# print(data2['SUBJECT'][0])
-# print(data2['Time'][14])
-# print(data2['Initial \n(mCi)'][14])
-# print(list(data2['Time'][2]))
-# print(len(data2['Time'][2]))
+imageanaly = {'Yes': 1, 'No': 0}
+data2['Image\nAnalysis'] = data2['Image\nAnalysis'].map(imageanaly)
 
+produc = {'Yes': 1, 'No': 0}
+data2['C11/F18\nproduction'] = data2['C11/F18\nproduction'].map(produc)
 
 test = pd.DataFrame(data2)
 test.to_csv('test2.csv', index=False, na_rep = 'null' )
