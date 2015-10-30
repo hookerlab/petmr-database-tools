@@ -37,5 +37,9 @@ data2['Image\nAnalysis'] = data2['Image\nAnalysis'].map(imageanaly)
 produc = {'Yes': 1, 'No': 0}
 data2['C11/F18\nproduction'] = data2['C11/F18\nproduction'].map(produc)
 
+#converting date
+dt = pd.datetime.strptime(data2['Date'][0], '%m/%d/%Y')
+print ('{0}-{1}-{2}'.format(dt.year, dt.month, dt.day % 100))
+
 test = pd.DataFrame(data2)
 test.to_csv('test2.csv', index=False, na_rep = 'null' )
