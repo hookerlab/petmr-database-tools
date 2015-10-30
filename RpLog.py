@@ -38,8 +38,14 @@ produc = {'Yes': 1, 'No': 0}
 data2['C11/F18\nproduction'] = data2['C11/F18\nproduction'].map(produc)
 
 #converting date
-dt = pd.datetime.strptime(data2['Date'][0], '%m/%d/%Y')
-print ('{0}-{1}-{2}'.format(dt.year, dt.month, dt.day % 100))
+def dateconv(date):
+    dt = pd.datetime.strptime(data2['Date'][date], '%m/%d/%Y')
+    return str('{0}-{1}-{2}'.format(dt.year, dt.month, dt.day % 100))
+
+x = 0
+while x < num_rows:
+    data2.ix[x, 'Date'] = dateconv(x)
+    x += 1
 
 test = pd.DataFrame(data2)
 test.to_csv('test2.csv', index=False, na_rep = 'null' )
