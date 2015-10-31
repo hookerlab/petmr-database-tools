@@ -92,6 +92,28 @@ allTimeConv('Residual_Time')
 allTimeConv('TOI')
 errList.sort()
 
+#check for anagram - for Manuf/etc
+def anagramSolution4(s1, s2):
+    c1 = [0]*26
+    c2 = [0]*26
+    for i in range(len(s1)):
+        pos = ord(s1[i]) - ord('a')
+        if pos >= 0:
+            c1[pos] += 1
+    for i in range(len(s2)):
+        pos = ord(s2[i])-ord('a')
+        if pos >= 0:
+            c2[pos] += 1
+    j = 0
+    stillOK = True
+    while j<26 and stillOK:
+        if c1[j]==c2[j]:
+            j = j + 1
+        else:
+            stillOK = False
+    return stillOK
+
+
 #save a csv file with a list of indexes with errors        
 # errIndex = pd.DataFrame(errList)
 # errIndex.columns = ['Error_Indexes']
