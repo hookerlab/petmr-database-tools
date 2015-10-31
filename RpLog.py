@@ -16,7 +16,7 @@ data.rename(columns={' ': 'Date'}, inplace=True)
 print(list(data))
 
 #drop unneeded column
-data2 = data.drop(['STUDY'], axis = 1)
+data2 = data.drop(['STUDY', 'PI'], axis=1)
 
 #renamed Columns
 data2.rename(columns={'Unnamed: 17': 'Comments'}, inplace=True)
