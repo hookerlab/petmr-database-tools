@@ -63,5 +63,22 @@ def isTimeFormat(input):
     except ValueError:
         return False
 
+#converts all time data to 24hr format, indexes of times with errors are saved to errList
+y = 0
+#holds list of indexes with time formatting errors
+errList = []
+while y < num_rows:
+    curr = data2['Time'][y]
+    timecheck = isTimeFormat(curr)
+    if not(curr == 'NULL' or curr == 'N/A' or curr == 'n/a' or curr == 'N/a' or curr == 'n/A' or timecheck == True):#ON THIS PART FIND HOW TO FIX ROW 47 already in mil time
+        try:
+            data2.ix[y, 'Time'] = timeconv(y)
+        except ValueError:
+            print(y)
+            errList.append(y)
+            y += 1
+    else:
+        y += 1
+        
 test = pd.DataFrame(data2)
 test.to_csv('test2.csv', index=False, na_rep = 'null' )
