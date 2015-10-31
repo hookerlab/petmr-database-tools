@@ -22,20 +22,25 @@ data2 = data.drop(['STUDY'], axis = 1)
 data2.rename(columns={'Unnamed: 17': 'Comments'}, inplace=True)
 print(list(data2))
 
-# print(data2['ID'][12])
-# print(data2['ID'][14])
+#changes data in column to lowercase
+data2['SUBJECT'] = data2['SUBJECT'].str.lower()
+data2['MANUF.'] = data2['MANUF.'].str.lower()
+data2['Blood\nAnalysis'] = data2['Blood\nAnalysis'].str.lower()
+data2['Image\nAnalysis'] = data2['Image\nAnalysis'].str.lower()
+data2['C11/F18\nproduction'] = data2['C11/F18\nproduction'].str.lower()
+
 #fills in empty cells
 data2.fillna(value = 'NULL',inplace=True)
 
 #change yes/no to boolean 1/0                         PROBLEM RETURNS A DOUBLE INSTEAD OF INT IN CONSOLE BUT NOT EXCEL??
-aboolean = {'Yes': 1, 'No': 0}
+aboolean = {'yes': 1, 'no': 0}
 data2['Blood\nAnalysis'] = data2['Blood\nAnalysis'].map(aboolean)
 
 data2['Image\nAnalysis'] = data2['Image\nAnalysis'].map(aboolean)
 
 data2['C11/F18\nproduction'] = data2['C11/F18\nproduction'].map(aboolean)
 
-#converting date
+#converts date mm/dd/yyyy to yyyy-mm-dd
 def dateconv(date):
     dt = pd.datetime.strptime(data2['Date'][date], '%m/%d/%Y')
     return str('{0}-{1}-{2}'.format(dt.year, dt.month, dt.day % 100))
@@ -46,7 +51,7 @@ while x < num_rows:
     data2.ix[x, 'Date'] = dateconv(x)
     x += 1
 
-#converts 12hr format to mil time
+#convert 12 hr to 24 hr
 def timeconv(time):
     return str(pd.datetime.strptime(data2['Time'][time], '%I:%M:%S %p').time())
 
