@@ -40,6 +40,7 @@ def dateconv(date):
     dt = pd.datetime.strptime(data2['Date'][date], '%m/%d/%Y')
     return str('{0}-{1}-{2}'.format(dt.year, dt.month, dt.day % 100))
 
+#converts all the data dates
 x = 0
 while x < num_rows:
     data2.ix[x, 'Date'] = dateconv(x)
@@ -48,6 +49,14 @@ while x < num_rows:
 #converts 12hr format to mil time
 def timeconv(time):
     return str(pd.datetime.strptime(data2['Time'][time], '%I:%M:%S %p').time())
+
+#checks if time is already in 24hr format
+def isTimeFormat(input):
+    try:
+        pd.datetime.strptime(input, '%H:%M:%S').time()
+        return True
+    except ValueError:
+        return False
 
 test = pd.DataFrame(data2)
 test.to_csv('test2.csv', index=False, na_rep = 'null' )
