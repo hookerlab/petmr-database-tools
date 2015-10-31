@@ -18,8 +18,12 @@ print(list(data))
 #drop unneeded column
 data2 = data.drop(['STUDY'], axis = 1)
 
-#renamed Column 18 to Comments
+#renamed Columns
 data2.rename(columns={'Unnamed: 17': 'Comments'}, inplace=True)
+data2.rename(columns={'Time': 'Initial_Time'}, inplace=True)
+data2.rename(columns={'Time.1': 'Residual_Time'}, inplace=True)
+data2.rename(columns={'Scan time/\nInjection time': 'TOI'}, inplace=True)
+# data2.rename(columns={'Unnamed: 34': 'Indicies_With_Error'}, inplace=True)
 print(list(data2))
 
 #changes data in column to lowercase
@@ -52,8 +56,8 @@ while x < num_rows:
     x += 1
 
 #convert 12 hr to 24 hr
-def timeconv(time):
-    return str(pd.datetime.strptime(data2['Time'][time], '%I:%M:%S %p').time())
+def timeconv(colName, time):
+    return str(pd.datetime.strptime(data2[colName][time], '%I:%M:%S %p').time())
 
 #checks if time is already in 24hr format
 def isTimeFormat(input):
@@ -63,22 +67,36 @@ def isTimeFormat(input):
     except ValueError:
         return False
 
-#converts all time data to 24hr format, indexes of times with errors are saved to errList
-y = 0
 #holds list of indexes with time formatting errors
 errList = []
-while y < num_rows:
-    curr = data2['Time'][y]
-    timecheck = isTimeFormat(curr)
-    if not(curr == 'NULL' or curr == 'N/A' or curr == 'n/a' or curr == 'N/a' or curr == 'n/A' or timecheck == True):#ON THIS PART FIND HOW TO FIX ROW 47 already in mil time
-        try:
-            data2.ix[y, 'Time'] = timeconv(y)
-        except ValueError:
-            print(y)
-            errList.append(y)
+def allTimeConv(colName):
+    #converts all time data to 24hr format, indexes of times with errors are saved to errList
+    y = 0
+    while y < num_rows:
+        curr = data2[colName][y]
+        timecheck = isTimeFormat(curr)
+        if not(curr == 'NULL' or curr == 'N/A' or curr == 'n/a' or curr == 'N/a' or curr == 'n/A' or timecheck == True):#ON THIS PART FIND HOW TO FIX ROW 47 already in mil time
+            try:
+                data2.ix[y, colName] = timeconv(colName, y)
+            except ValueError:
+                # print(y)
+                if y not in errList:
+                    errList.append(y)
+                y += 1
+        else:
             y += 1
-    else:
-        y += 1
-        
-test = pd.DataFrame(data2)
-test.to_csv('test2.csv', index=False, na_rep = 'null' )
+
+#converts all time data for initial,residual, and TOI
+allTimeConv('Initial_Time')
+allTimeConv('Residual_Time')
+allTimeConv('TOI')
+errList.sort()
+
+#save a csv file with a list of indexes with errors        
+# errIndex = pd.DataFrame(errList)
+# errIndex.columns = ['Error_Indexes']
+# errIndex.to_csv('Indexes_With_Errors.csv', index=False, na_rep = 'null' )
+
+#saves a csv file the data
+# test = pd.DataFrame(data2)
+# test.to_csv('test2.csv', index=False, na_rep = 'null' )
