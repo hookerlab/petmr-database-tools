@@ -131,10 +131,11 @@ uni_res.sort()
 
 #swaps unrelated data to comments
 def commInit(colName, count):
-    if data['Comments'][count] == 'NULL':
+    if data[colName][count] != 'NULL':
+        if data['Comments'][count] == 'NULL':
             data.ix[count, 'Comments'] = data[colName][count]
             data.ix[count, colName] = 'NULL'
-    else:
+        else:
             data.ix[count, 'Comments'] += '; ' + data[colName][count]
             data.ix[count, colName] = 'NULL'
 
@@ -162,6 +163,19 @@ for x in data['MANUF.']:
     elif 'house' in x:
         data.ix[counts, 'MANUF.'] = 'in house'
     counts += 1
+
+#concatenates the extra comments
+comm_loc = data.columns.get_loc("Comments")
+temp = 0
+while temp < num_rows:
+    for col in data.ix[:, comm_loc + 1:]:
+        if data['Comments'][temp] != 'NULL':
+            if data[col][temp] != 'NULL':
+                data.ix[temp, 'Comments'] += '; ' + str(data[col][temp])
+        else:
+            if data[col][temp] != 'NULL':
+                data.ix[temp, 'Comments'] = str(data[col][temp])
+    temp += 1
 
 #saves to csv file
 writefile = pd.DataFrame(data)
