@@ -129,6 +129,19 @@ uni_int.sort()
 uni_res = findUni(list_res)
 uni_res.sort()
 
+#concatenates the extra comments
+comm_loc = data.columns.get_loc("Comments")
+temp = 0
+while temp < num_rows:
+    for col in data.ix[:, comm_loc + 1:]:
+        if data['Comments'][temp] != 'NULL':
+            if data[col][temp] != 'NULL':
+                data.ix[temp, 'Comments'] += '; ' + str(data[col][temp])
+        else:
+            if data[col][temp] != 'NULL':
+                data.ix[temp, 'Comments'] = str(data[col][temp])
+    temp += 1
+
 #swaps unrelated data to comments
 def commInit(colName, count):
     if data[colName][count] != 'NULL':
@@ -164,22 +177,9 @@ for x in data['MANUF.']:
         data.ix[counts, 'MANUF.'] = 'in house'
     counts += 1
 
-#concatenates the extra comments
-comm_loc = data.columns.get_loc("Comments")
-temp = 0
-while temp < num_rows:
-    for col in data.ix[:, comm_loc + 1:]:
-        if data['Comments'][temp] != 'NULL':
-            if data[col][temp] != 'NULL':
-                data.ix[temp, 'Comments'] += '; ' + str(data[col][temp])
-        else:
-            if data[col][temp] != 'NULL':
-                data.ix[temp, 'Comments'] = str(data[col][temp])
-    temp += 1
-
 #saves to csv file
-writefile = pd.DataFrame(data)
-writefile.to_csv('final_edited.csv', index=False, na_rep='null')
+# writefile = pd.DataFrame(data)
+# writefile.to_csv('final_edited.csv', index=False, na_rep='null')
 
 #saves csv file of indexes with data error
 # errList.sort()
