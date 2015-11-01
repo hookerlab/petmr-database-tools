@@ -92,26 +92,54 @@ allTimeConv('Residual_Time')
 allTimeConv('TOI')
 errList.sort()
 
-#check for anagram - for Manuf/etc
-def anagramSolution4(s1, s2):
-    c1 = [0]*26
-    c2 = [0]*26
-    for i in range(len(s1)):
-        pos = ord(s1[i]) - ord('a')
-        if pos >= 0:
-            c1[pos] += 1
-    for i in range(len(s2)):
-        pos = ord(s2[i])-ord('a')
-        if pos >= 0:
-            c2[pos] += 1
-    j = 0
-    stillOK = True
-    while j<26 and stillOK:
-        if c1[j]==c2[j]:
-            j = j + 1
-        else:
-            stillOK = False
-    return stillOK
+#gets unique values in a column
+list_sub = pd.unique(data2['SUBJECT'])
+list_man = pd.unique(data2['MANUF.'])
+list_int = pd.unique(data2['Initial (mCi)'])
+list_res = pd.unique(data2['Residual (mCi)'])
+
+#returns a list of unique non number entries
+def findUni(inp):
+    tempList = []
+    alpha = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
+             'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
+    for x in inp:
+        for y in alpha:
+            if y in x:
+                if x not in tempList:
+                    tempList.append(x)
+                    break
+    return tempList
+    
+#finds unique non number and sorts
+uni_man = findUni(list_man)
+uni_man.sort()
+uni_int = findUni(list_int)
+uni_int.sort()
+uni_res = findUni(list_res)
+uni_res.sort()
+
+#relabels common manufactures to a common name
+for x in data2['MANUF.']:
+    if 'cardinal' in x:
+        data2.ix[x, 'MANUF.'] = 'cardinal health'
+    elif 'iba' or 'molec' in x:
+        data2.ix[x, 'MANUF.'] = 'i.b.a. molec'
+    elif 'house' in x:
+        data2.ix[x, 'MANUF.'] = 'in house'
+
+#swaps unrealated data to comments
+def commInit(colName, count):
+    if data2['Comments'][count] == 'NULL':
+            data2.ix[count, 'Comments'] = data2[colName][count]
+            data2.ix[count, colName] = 'NULL'
+    else:
+            data2.ix[count, 'Comments'] += '; ' + data2[colName][count]
+            data2.ix[count, colName] = 'NULL'
+
+
+
+
 
 
 #save a csv file with a list of indexes with errors        
