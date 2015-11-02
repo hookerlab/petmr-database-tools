@@ -44,13 +44,13 @@ data.fillna(value='NULL', inplace=True)
 temp = 0
 nalist = ['n/a', 'N/A', 'N/a', 'n/A']
 while temp < num_rows:
-    for col in data.ix[:, 0:17]:
+    for col in data.ix[:, 0:16]:
         for y in nalist:
             if y == data[col][temp]:
                 data.ix[temp, col] = 'NULL'
                 break
     temp += 1
-    
+
 #checks if subject is one of the 4 options
 bo = True
 for dat in data['SUBJECT']:
@@ -119,6 +119,7 @@ allTimeConv('Initial Time')
 allTimeConv('Residual Time')
 allTimeConv('Injection Time')
 
+
 #gets unique values in a column
 list_sub = pd.unique(data['SUBJECT'])
 list_man = pd.unique(data['MANUF.'])
@@ -176,7 +177,6 @@ def commMove(colName, uni_list):
         for y in uni_list:
             if y in x:
                 commInit(colName, counter)
-
         counter += 1
 
 #moves unrelated non number data to comments section
@@ -186,9 +186,9 @@ commMove('Residual (mCi)', uni_res)
 #relabels common manufactures to a common name
 counts = 0
 for x in data['MANUF.']:
-    if 'cardinal' in x:
+    if 'cardinal' in x and 'pet' not in x:
         data.ix[counts, 'MANUF.'] = 'cardinal health'
-    elif 'iba' in x or 'molec.' in x:
+    elif ('iba' in x or 'molec.' in x) and 'pet' not in x:
         data.ix[counts, 'MANUF.'] = 'i.b.a. molec'
     elif 'house' in x:
         data.ix[counts, 'MANUF.'] = 'in house'
@@ -196,15 +196,19 @@ for x in data['MANUF.']:
 
 #drop unneeded column
 data = data.drop(['STUDY', 'PI'], axis=1)
-data = data.drop(data.columns[18:], axis=1)
-print(list(data))
+data = data.drop(data.columns[16:], axis=1)
 
 #saves to csv file
-# writefile = pd.DataFrame(data)
-# writefile.to_csv('final_edited.csv', index=False, na_rep='null')
+writefile = pd.DataFrame(data)
+writefile.to_csv('final_edited.csv', index=False, na_rep='null')
 
 #saves csv file of indexes with data error
 # errList.sort()
 # errIndex = pd.DataFrame(errList)
-# errIndex.columns = ['Error_Indexes']
-# errIndex.to_csv('Indexes_With_Errors.csv', index=False, na_rep='null')
+# errIndex.columns = ['Time_Error_Indexes']
+# errIndex.to_csv('Indexes_With_Time_Errors.csv', index=False, na_rep='NULL')
+
+#creates json file
+data2 = data.to_json(orient='index')
+with open('final.json', 'w') as outfile:
+    json.dump(data2, outfile)
