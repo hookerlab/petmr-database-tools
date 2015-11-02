@@ -200,7 +200,7 @@ data = data.drop(data.columns[16:], axis=1)
 
 #saves to csv file
 writefile = pd.DataFrame(data)
-writefile.to_csv('final_edited.csv', index=False, na_rep='null')
+writefile.to_csv('final_edited.csv', index=False, na_rep='NULL')
 
 #saves csv file of indexes with data error
 # errList.sort()
