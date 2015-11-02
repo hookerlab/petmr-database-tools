@@ -4,7 +4,9 @@ import csv
 __author__ = 'jphan'
 
 #read in excel file
-data = pd.read_csv("RADIOPHARM log - Summary-mod.csv")
+filename = input('Enter Path to file')
+data = pd.read_csv(filename)
+# data = pd.read_csv("RADIOPHARM log - Summary-mod.csv")
 
 #get number of rows
 num_rows = len(data)
