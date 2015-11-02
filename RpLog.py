@@ -60,11 +60,19 @@ for dat in data['SUBJECT']:
         bo = False
         break
 
-#change yes/no to boolean 1/0
-aboolean = {'yes': 1, 'no': 0}
-data['Blood Analysis'] = data['Blood Analysis'].map(aboolean)
-data['Image Analysis'] = data['Image Analysis'].map(aboolean)
-data['C11/F18 Production'] = data['C11/F18 Production'].map(aboolean)
+#converts yes/no to 1/0
+def boolConv(col):
+    counts = 0
+    for x in data[col]:
+        if 'yes' in x:
+            data.ix[counts, col] = int(1)
+        elif 'no' in x:
+            data.ix[counts, col] = int(0)
+        counts += 1
+
+boolConv('Blood Analysis')
+boolConv('Image Analysis')
+boolConv('C11/F18 Production')
 
 #converts date mm/dd/yyyy to yyyy-mm-dd
 def dateconv(date):
