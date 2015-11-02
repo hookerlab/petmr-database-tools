@@ -177,6 +177,11 @@ for x in data['MANUF.']:
         data.ix[counts, 'MANUF.'] = 'in house'
     counts += 1
 
+#drop unneeded column
+data = data.drop(['STUDY', 'PI'], axis=1)
+data = data.drop(data.columns[18:], axis=1)
+print(list(data))
+
 #saves to csv file
 # writefile = pd.DataFrame(data)
 # writefile.to_csv('final_edited.csv', index=False, na_rep='null')
