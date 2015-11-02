@@ -202,7 +202,7 @@ data = data.drop(data.columns[16:], axis=1)
 
 #saves data to csv file
 writefile = pd.DataFrame(data)
-writefile.to_csv('final_edited.csv', index=False, na_rep='NULL')
+writefile.to_csv('RADIOPHARM log - Summary_edited.csv', index=False, na_rep='NULL')
 
 #creates JSON file of data
 myJSON = data.to_json(path_or_buf=None, orient='records', date_format='epoch', double_precision=10, force_ascii=True,
