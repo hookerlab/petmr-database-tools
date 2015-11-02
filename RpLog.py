@@ -41,7 +41,16 @@ data['Residual (mCi)'] = data['Residual (mCi)'].str.lower()
 
 #fills in empty cells
 data.fillna(value='NULL', inplace=True)
-
+temp = 0
+nalist = ['n/a', 'N/A', 'N/a', 'n/A']
+while temp < num_rows:
+    for col in data.ix[:, 0:17]:
+        for y in nalist:
+            if y == data[col][temp]:
+                data.ix[temp, col] = 'NULL'
+                break
+    temp += 1
+    
 #checks if subject is one of the 4 options
 bo = True
 for dat in data['SUBJECT']:
@@ -86,7 +95,7 @@ def allTimeConv(colName):
     while y < num_rows:
         curr = data[colName][y]
         timecheck = isTimeFormat(curr)
-        if not(curr == 'NULL' or curr == 'N/A' or curr == 'n/a' or curr == 'N/a' or curr == 'n/A' or timecheck == True):
+        if not(curr == 'NULL' or timecheck == True):
             try:
                 data.ix[y, colName] = timeconv(colName, y)
             except ValueError:
@@ -136,20 +145,20 @@ while temp < num_rows:
     for col in data.ix[:, comm_loc + 1:]:
         if data['Comments'][temp] != 'NULL':
             if data[col][temp] != 'NULL':
-                data.ix[temp, 'Comments'] += '; ' + str(data[col][temp])
+                data.ix[temp, 'Comments'] += ', "' + str(data[col][temp]) + '"'
         else:
             if data[col][temp] != 'NULL':
-                data.ix[temp, 'Comments'] = str(data[col][temp])
+                data.ix[temp, 'Comments'] = '"' + str(data[col][temp]) + '"'
     temp += 1
 
 #swaps unrelated data to comments
 def commInit(colName, count):
     if data[colName][count] != 'NULL':
         if data['Comments'][count] == 'NULL':
-            data.ix[count, 'Comments'] = data[colName][count]
+            data.ix[count, 'Comments'] = '"' + data[colName][count] + '"'
             data.ix[count, colName] = 'NULL'
         else:
-            data.ix[count, 'Comments'] += '; ' + data[colName][count]
+            data.ix[count, 'Comments'] += ', "' + data[colName][count] + '"'
             data.ix[count, colName] = 'NULL'
 
 #moves random data to comments column
