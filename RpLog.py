@@ -200,9 +200,15 @@ for x in data['MANUF.']:
 data = data.drop(['STUDY', 'PI'], axis=1)
 data = data.drop(data.columns[16:], axis=1)
 
-#saves to csv file
+#saves data to csv file
 writefile = pd.DataFrame(data)
 writefile.to_csv('final_edited.csv', index=False, na_rep='NULL')
+
+#creates JSON file of data
+myJSON = data.to_json(path_or_buf=None, orient='records', date_format='epoch', double_precision=10, force_ascii=True,
+                      date_unit='ms', default_handler=None)
+with open('RadioPharmLog.json', 'w') as outfile:
+    json.dump(myJSON, outfile)
 
 #saves csv file of indexes with data error
 # errList.sort()
@@ -210,7 +216,3 @@ writefile.to_csv('final_edited.csv', index=False, na_rep='NULL')
 # errIndex.columns = ['Time_Error_Indexes']
 # errIndex.to_csv('Indexes_With_Time_Errors.csv', index=False, na_rep='NULL')
 
-#creates json file
-data2 = data.to_json(orient='index')
-with open('final.json', 'w') as outfile:
-    json.dump(data2, outfile)
