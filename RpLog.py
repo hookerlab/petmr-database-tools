@@ -8,6 +8,7 @@ __author__ = 'jphan'
 filename = input('Enter Path to file')
 data = pd.read_csv(filename)
 # data = pd.read_csv("RADIOPHARM log - Summary.csv")
+#C:\Users\strike\Desktop\project\RADIOPHARM log - Summary.csv
 
 # gets the number of rows
 num_rows = len(data)
@@ -104,7 +105,7 @@ def dateconv(date):
             pass
     return str('{0}-{1}-{2}'.format(dt.year, dt.month, dt.day % 100))
 
-# Reformats all the rows in dates to yyyy-mm-dd
+# Reformats all the rows in dates to yyyy-mm-dd by calling dateconv()
 x = 0
 while x < num_rows:
     try:
@@ -168,12 +169,12 @@ def allTimeConv(colName):
         else:
             y += 1
 
-# Calls allTimeConv to convert all time data for initial,residual, and TOI to 24hr format
+# Calls allTimeConv() to convert all time data for initial,residual, and TOI to 24hr format
 allTimeConv('Initial Time')
 allTimeConv('Residual Time')
 allTimeConv('Injection Time')
 
-# gets the unique values in a column
+# Gets the unique values in a column
 list_sub = pd.unique(data['SUBJECT'])
 list_man = pd.unique(data['MANUF.'])
 list_int = pd.unique(data['Initial (mCi)'])
@@ -253,7 +254,7 @@ def commMove(colName, uni_list):
                 commInit(colName, row)
         row += 1
 
-# moves unrelated non-number data to comments section
+# Calls commMove() to move unrelated non-number data to comments section
 commMove('Initial (mCi)', uni_int)
 commMove('Residual (mCi)', uni_res)
 
