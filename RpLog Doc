@@ -1,14 +1,87 @@
-RpLog.py does:
--Renames columns to have meaningful names and avoid returns(\n, next line)
--Replaces empty cells/infomation with 'NULL'
--Can check 'Subjects' to be one of the following 'human,animal,phantom,or NULL'
--Converts 'Yes/No' to 1/0 for columns: Blood Analysis, Image Analysis, C11/F18 Production
--Converts dates to yyyy-mm-dd format
--Converts time to 24hr(military) format
--Concatenates extra columns with data to Comments column
--Moves any non-related data(non-number) in Initial and Residual Columns
--Relabels common names with minor differences (ie. in house / in-house) to a common name (ie in house)
--Drops unneeded columns before outputing to JSON file
--Creates CSV file of edited columns
--Creates JSON file of the data
--Creates CSV file with indexes of columns that has errors
+def boolConv(col):
+    """ converts yes/no to 1/0
+    Parameters:
+    col: String
+        Name of column
+    Return:
+    Out: Object
+        Returns each row of the column as an object because there are cells that are 'NULL' from missing data
+    """
+    
+def dateconv(date):
+    """ converts date mm/dd/yyyy to yyyy-mm-dd
+    Parameters:
+    date: String
+        String of date of the current row in the 'Date' column
+    Returns:
+    Out: String
+        Returns reformatted date yyyy-mm-dd
+    """
+    
+def isTimeFormat(input):
+    """ checks if time is already in 24hr format
+    Parameter:
+    input: String
+        String of the time input
+    Returns:
+    Out: Boolean
+        True: if time string is already in 24hr format
+        False: if time string is not in 24hr format
+    """
+    
+  def timeconv(colName, row):
+    """ convert 12 hr to 24 hr
+    Parameters:
+    colName: String
+        Name of column
+    row: String
+        Current row in the column
+    Return:
+    Out: String
+        Returns the time in 24hr format
+    """
+    
+  def allTimeConv(colName):
+    """ converts all time data to 24hr format, indexes of times with errors are saved to errList
+    Parameter:
+    colName: String
+        Name of column
+    See Also:
+    isTimeFormat(): checks if time is already in 24hr format
+    timeconv(): converts time to 24hr format
+    """
+    
+  def findUni(inp):
+    """ returns a list of unique non-number value
+    Parameter:
+    inp: Object
+        List of unique values
+    Return:
+    Out: Object
+        Returns a list of unique non-number values
+    """
+    
+  def commInit(colName, row):
+    """ Moves unrelated data to comments and sets original position to 'NULL'
+    Parameter:
+    colName: String
+        Name of column
+    row: int
+        Current row
+    """
+    
+  def commMove(colName, uni_list):
+    """ moves unrelated data to comments column
+    Parameter:
+    colName: String
+        Name of column
+    uni_list: Object
+        List of unique values
+    See Also:
+    commInit: moves unique value to comment and sets original cell to 'NULL'
+    """
+    
+  
+
+
+
