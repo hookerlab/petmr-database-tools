@@ -1,24 +1,26 @@
 import pandas as pd
 import json
 import csv
+import sys
 __author__ = 'jphan'
 
-#read in excel file
-filename = input('Enter Path to file')
-data = pd.read_csv(filename)
-# data = pd.read_csv("RADIOPHARM log - Summary-mod.csv")
 
-#get number of rows
+# read in excel file
+# filename = input('Enter Path to file')
+# data = pd.read_csv(filename)
+data = pd.read_csv("RADIOPHARM log - Summary.csv")
+
+# get number of rows
 num_rows = len(data)
 
-#holds list of indexes with time formatting errors
+# holds list of indexes with time formatting errors
 errList = []
 
-#title row
+# title row
 print("Total rows: {}".format(num_rows))
 print(list(data))
 
-#renamed Columns
+# renamed Columns
 data.rename(columns={' ': 'Date'}, inplace=True)
 data.rename(columns={'Initial \n(mCi)': 'Initial (mCi)'}, inplace=True)
 data.rename(columns={'Time': 'Initial Time'}, inplace=True)
@@ -32,7 +34,7 @@ data.rename(columns={'Image\nAnalysis': 'Image Analysis'}, inplace=True)
 data.rename(columns={'Blood\nAnalysis': 'Blood Analysis'}, inplace=True)
 data.rename(columns={'Unnamed: 17': 'Comments'}, inplace=True)
 
-#changes data in column to lowercase
+# changes data in column to lowercase
 data['SUBJECT'] = data['SUBJECT'].str.lower()
 data['MANUF.'] = data['MANUF.'].str.lower()
 data['Blood Analysis'] = data['Blood Analysis'].str.lower()
@@ -41,7 +43,7 @@ data['C11/F18 Production'] = data['C11/F18 Production'].str.lower()
 data['Initial (mCi)'] = data['Initial (mCi)'].str.lower()
 data['Residual (mCi)'] = data['Residual (mCi)'].str.lower()
 
-#fills in empty cells
+# fills in empty cells
 data.fillna(value='NULL', inplace=True)
 temp = 0
 nalist = ['n/a', 'N/A', 'N/a', 'n/A']
@@ -53,7 +55,7 @@ while temp < num_rows:
                 break
     temp += 1
 
-#checks if subject is one of the 4 options
+# checks if subject is one of the 4 options
 bo = True
 for dat in data['SUBJECT']:
     if dat == 'human' or dat == 'animal' or dat == 'phantom' or dat == 'NULL':
@@ -62,7 +64,7 @@ for dat in data['SUBJECT']:
         bo = False
         break
 
-#converts yes/no to 1/0
+# converts yes/no to 1/0
 def boolConv(col):
     counts = 0
     for x in data[col]:
@@ -76,18 +78,29 @@ boolConv('Blood Analysis')
 boolConv('Image Analysis')
 boolConv('C11/F18 Production')
 
-#converts date mm/dd/yyyy to yyyy-mm-dd
+# converts date mm/dd/yyyy to yyyy-mm-dd
 def dateconv(date):
-    dt = pd.datetime.strptime(data['Date'][date], '%m/%d/%Y')
+    formtype = ['%m/%d/%y', '%m/%d/%Y']
+    for f in formtype:
+        try:
+            dt = pd.datetime.strptime(data['Date'][date], f)
+            break
+        except ValueError:
+            pass
     return str('{0}-{1}-{2}'.format(dt.year, dt.month, dt.day % 100))
 
-#converts all the data dates
+# converts all the data dates
 x = 0
 while x < num_rows:
-    data.ix[x, 'Date'] = dateconv(x)
+    try:
+        data.ix[x, 'Date'] = dateconv(x)
+    except ValueError:
+        if x not in errList:
+            print(data['Date'][x])
+            errList.append(x)
     x += 1
 
-#checks if time is already in 24hr format
+# checks if time is already in 24hr format
 def isTimeFormat(input):
     try:
         pd.datetime.strptime(input, '%H:%M:%S').time()
@@ -95,17 +108,17 @@ def isTimeFormat(input):
     except ValueError:
         return False
 
-#convert 12 hr to 24 hr
+# convert 12 hr to 24 hr
 def timeconv(colName, time):
     return str(pd.datetime.strptime(data[colName][time], '%I:%M:%S %p').time())
 
-#converts all time data to 24hr format, indexes of times with errors are saved to errList
+# converts all time data to 24hr format, indexes of times with errors are saved to errList
 def allTimeConv(colName):
     y = 0
     while y < num_rows:
         curr = data[colName][y]
         timecheck = isTimeFormat(curr)
-        if not(curr == 'NULL' or timecheck == True):
+        if not (curr == 'NULL' or timecheck == True):
             try:
                 data.ix[y, colName] = timeconv(colName, y)
             except ValueError:
@@ -116,19 +129,19 @@ def allTimeConv(colName):
         else:
             y += 1
 
-#converts all time data for initial,residual, and TOI
+# converts all time data for initial,residual, and TOI
 allTimeConv('Initial Time')
 allTimeConv('Residual Time')
 allTimeConv('Injection Time')
 
-
-#gets unique values in a column
+# gets unique values in a column
 list_sub = pd.unique(data['SUBJECT'])
 list_man = pd.unique(data['MANUF.'])
 list_int = pd.unique(data['Initial (mCi)'])
 list_res = pd.unique(data['Residual (mCi)'])
 
-#returns a list of unique non number entries
+
+# returns a list of unique non number entries
 def findUni(inp):
     tempList = []
     alpha = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
@@ -141,7 +154,8 @@ def findUni(inp):
                     break
     return tempList
 
-#finds unique non number and sorts
+
+# finds unique non number and sorts
 uni_man = findUni(list_man)
 uni_man.sort()
 uni_int = findUni(list_int)
@@ -149,7 +163,7 @@ uni_int.sort()
 uni_res = findUni(list_res)
 uni_res.sort()
 
-#concatenates the extra comments
+# concatenates the extra comments
 comm_loc = data.columns.get_loc("Comments")
 temp = 0
 while temp < num_rows:
@@ -162,7 +176,8 @@ while temp < num_rows:
                 data.ix[temp, 'Comments'] = '"' + str(data[col][temp]) + '"'
     temp += 1
 
-#swaps unrelated data to comments
+
+# swaps unrelated data to comments
 def commInit(colName, count):
     if data[colName][count] != 'NULL':
         if data['Comments'][count] == 'NULL':
@@ -172,7 +187,8 @@ def commInit(colName, count):
             data.ix[count, 'Comments'] += ', "' + data[colName][count] + '"'
             data.ix[count, colName] = 'NULL'
 
-#moves random data to comments column
+
+# moves random data to comments column
 def commMove(colName, uni_list):
     counter = 0
     for x in data[colName]:
@@ -181,11 +197,12 @@ def commMove(colName, uni_list):
                 commInit(colName, counter)
         counter += 1
 
-#moves unrelated non number data to comments section
+
+# moves unrelated non number data to comments section
 commMove('Initial (mCi)', uni_int)
 commMove('Residual (mCi)', uni_res)
 
-#relabels common manufactures to a common name
+# relabels common manufactures to a common name
 counts = 0
 for x in data['MANUF.']:
     if 'cardinal' in x and 'pet' not in x:
@@ -196,23 +213,23 @@ for x in data['MANUF.']:
         data.ix[counts, 'MANUF.'] = 'in house'
     counts += 1
 
-#drop unneeded column
+# drop unneeded column
 data = data.drop(['STUDY', 'PI'], axis=1)
 data = data.drop(data.columns[16:], axis=1)
 
-#saves data to csv file
+# saves modified data to csv file
 writefile = pd.DataFrame(data)
 writefile.to_csv('RADIOPHARM log - Summary_edited.csv', index=False, na_rep='NULL')
 
 #creates JSON file of data
 myJSON = data.to_json(path_or_buf=None, orient='records', date_format='epoch', double_precision=10, force_ascii=True,
                       date_unit='ms', default_handler=None)
+print(myJSON)
 with open('RadioPharmLog.json', 'w') as outfile:
     json.dump(myJSON, outfile)
 
-#saves csv file of indexes with data error
+# saves csv file of indexes with data error
 # errList.sort()
 # errIndex = pd.DataFrame(errList)
 # errIndex.columns = ['Time_Error_Indexes']
 # errIndex.to_csv('Indexes_With_Time_Errors.csv', index=False, na_rep='NULL')
-
