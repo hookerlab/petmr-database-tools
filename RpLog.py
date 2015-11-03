@@ -6,9 +6,9 @@ __author__ = 'jphan'
 
 
 # read in excel file
-# filename = input('Enter Path to file')
-# data = pd.read_csv(filename)
-data = pd.read_csv("RADIOPHARM log - Summary.csv")
+filename = input('Enter Path to file')
+data = pd.read_csv(filename)
+# data = pd.read_csv("RADIOPHARM log - Summary.csv")
 
 # get number of rows
 num_rows = len(data)
@@ -28,11 +28,12 @@ data.rename(columns={'Residual\n(mCi)': 'Residual (mCi)'}, inplace=True)
 data.rename(columns={'Time.1': 'Residual Time'}, inplace=True)
 data.rename(columns={'Scan time/\nInjection time': 'Injection Time'}, inplace=True)
 data.rename(columns={'Used\n(mCi)': 'Used (mCi)'}, inplace=True)
-data.rename(columns={'Tracer\nAdmin': 'Tracer Admin'}, inplace=True)
+data.rename(columns={'Tracer\nAdmin.': 'Tracer Admin'}, inplace=True)
 data.rename(columns={'C11/F18\nproduction': 'C11/F18 Production'}, inplace=True)
 data.rename(columns={'Image\nAnalysis': 'Image Analysis'}, inplace=True)
 data.rename(columns={'Blood\nAnalysis': 'Blood Analysis'}, inplace=True)
 data.rename(columns={'Unnamed: 17': 'Comments'}, inplace=True)
+print(list(data))
 
 # changes data in column to lowercase
 data['SUBJECT'] = data['SUBJECT'].str.lower()
@@ -140,7 +141,6 @@ list_man = pd.unique(data['MANUF.'])
 list_int = pd.unique(data['Initial (mCi)'])
 list_res = pd.unique(data['Residual (mCi)'])
 
-
 # returns a list of unique non number entries
 def findUni(inp):
     tempList = []
@@ -153,7 +153,6 @@ def findUni(inp):
                     tempList.append(x)
                     break
     return tempList
-
 
 # finds unique non number and sorts
 uni_man = findUni(list_man)
@@ -176,7 +175,6 @@ while temp < num_rows:
                 data.ix[temp, 'Comments'] = '"' + str(data[col][temp]) + '"'
     temp += 1
 
-
 # swaps unrelated data to comments
 def commInit(colName, count):
     if data[colName][count] != 'NULL':
@@ -187,7 +185,6 @@ def commInit(colName, count):
             data.ix[count, 'Comments'] += ', "' + data[colName][count] + '"'
             data.ix[count, colName] = 'NULL'
 
-
 # moves random data to comments column
 def commMove(colName, uni_list):
     counter = 0
@@ -196,7 +193,6 @@ def commMove(colName, uni_list):
             if y in x:
                 commInit(colName, counter)
         counter += 1
-
 
 # moves unrelated non number data to comments section
 commMove('Initial (mCi)', uni_int)
@@ -229,7 +225,8 @@ with open('RadioPharmLog.json', 'w') as outfile:
     json.dump(myJSON, outfile)
 
 # saves csv file of indexes with data error
-# errList.sort()
-# errIndex = pd.DataFrame(errList)
-# errIndex.columns = ['Time_Error_Indexes']
-# errIndex.to_csv('Indexes_With_Time_Errors.csv', index=False, na_rep='NULL')
+errList.sort()
+print(errList)
+errIndex = pd.DataFrame(errList)
+errIndex.columns = ['Error_Indexes']
+errIndex.to_csv('Indexes_With_Errors.csv', index=False, na_rep='NULL')
