@@ -9,3 +9,5 @@ RpLog.py does:
 -Moves any non-related data(non-number) in Initial and Residual Columns
 -Relabels common names with minor differences (ie. in house / in-house) to a common name (ie in house)
 -Drops unneeded columns before outputing to JSON file
+
+-creates csv file with indexes of columns that has errors
