@@ -8,7 +8,6 @@ __author__ = 'jphan'
 filename = input('Enter Path to file')
 data = pd.read_csv(filename)
 # data = pd.read_csv("RADIOPHARM log - Summary.csv")
-#C:\Users\strike\Desktop\project\RADIOPHARM log - Summary.csv
 
 # gets the number of rows
 num_rows = len(data)
