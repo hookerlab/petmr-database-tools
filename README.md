@@ -25,8 +25,8 @@ RpLog.py does:
 
 11.Creates:
 
-  -CSV file of edited columns
+  -CSV file of edited columns/data
     
-  -Creates JSON file of the data
+  -JSON file of the data
     
-  -Creates CSV file with indexes of columns that has errors
+  -CSV file with indexes of columns that has errors
