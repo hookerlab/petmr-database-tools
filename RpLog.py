@@ -2,7 +2,13 @@ import pandas as pd
 import json
 
 __author__ = 'jphan'
-
+"""
+Manipulates 'RADIOPHARM log - Summary.csv' data to required format
+Outputs: 
+-edited csv data file
+-JSON file of data
+-CSV of indexes with errors
+"""
 
 # reads in excel file path
 filename = input('Enter Path to file')
