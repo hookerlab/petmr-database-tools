@@ -278,8 +278,13 @@ writefile = pd.DataFrame(data)
 writefile.to_csv('RADIOPHARM log - Summary_edited.csv', index=False, na_rep='NULL')
 
 #creates JSON file of data
+#with index as key
 myJSON = data.to_json(path_or_buf=None, orient='index', date_format='epoch', double_precision=10, force_ascii=True,
                       date_unit='ms', default_handler=None)
+#without index as key
+# myJSON = data.to_json(path_or_buf=None, orient='records', date_format='epoch', double_precision=10, force_ascii=True,
+#                       date_unit='ms', default_handler=None)
+                      
 print(myJSON)
 with open('RadioPharmLog.json', 'w') as outfile:
     json.dump(myJSON, outfile)
