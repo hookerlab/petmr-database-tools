@@ -13,3 +13,10 @@ for dirName, subdirList, fileList in os.walk(pathname):
             pathList.append(os.path.join(dirName, fname))
             print('\t%s' % fname)
 print(pathList)
+
+for file in pathList:
+    # reads in excel file path from list
+    data = pd.read_excel(file)
+    print(list(data))
+    
+    
