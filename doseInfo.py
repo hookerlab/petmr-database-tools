@@ -9,11 +9,20 @@ __author__ = 'jphan'
 #  C:\Users\strike\Desktop\project2
 pathname = input('Enter Path to files')
 pathList = []
+dirList = []
+dirNameList = []
+fnameList = []
 for dirName, subdirList, fileList in os.walk(pathname):
+    currdir = os.path.basename(dirName)
     for fname in fileList:
         if 'Dose_info' in fname:
+        # if 'Dose_info.xls' in fname:
             pathList.append(os.path.join(dirName, fname))
-
+            dirList.append(dirName)
+            dirNameList.append(currdir)
+            nam = os.path.splitext(fname)[0]
+            fnameList.append(nam)
+            
 #list of indexes with errors
 errList = []
 
@@ -46,7 +55,39 @@ def timeconv(colName, row):
     """
     return str(pd.datetime.strptime(data[colName][row], '%I:%M:%S %p').time())
 
-for file in pathList:
+#asks user if they want to specify a save path for JSON file
+secArg = input('Do you want to specify a save path for the Dose_info.xls, JSON files? Enter "yes" or "no" ')
+secArg = secArg.lower()
+secArgCheck = ''
+while True:
+    if secArg == 'yes' or secArg == 'no':
+        break
+    else:
+        secArg = input('Input must be either "yes" or "no", enter again ')
+        secArg = secArg.lower()
+
+if secArg == 'yes':
+    secArgCheck = input('Are the save paths for each Dose_info.xls file the same location? Enter "yes" or "no" ')
+    secArgCheck = secArgCheck.lower()
+    while True:
+        if secArgCheck == 'yes' or secArgCheck == 'no':
+            break
+        else:
+            secArgCheck = input('Input must be either "yes" or "no", enter again ')
+            secArgCheck = secArgCheck.lower()
+
+specPath = False
+indivPath = False
+spec = ''
+if secArg == 'yes':
+    if secArgCheck == 'yes':
+        spec = input('Enter save Path(1 Directory): ')
+        specPath = True
+    elif secArgCheck == 'no':
+        indivPath = True
+        
+c = 0
+while c < len(pathList):
     # reads in excel file path from list
     data = pd.read_excel(file, header=None)
 
@@ -88,7 +129,6 @@ for file in pathList:
         else:
             counter += 1
 
-    print(len(data.columns))
     #creates list to hold quant_param values
     quant_param = []
     num = 1
@@ -135,7 +175,7 @@ for file in pathList:
     dose['residual activity'] = data[7][5]
     dose['residual time'] = data[7][6]
     dose['blood gluc'] = data[7][12]
-    dose['blood press'] = data[7][13]
+    dose['blood pressure'] = data[7][13]
     dose['pulse'] = data[7][14]
     dose['calibration_Cs_137'] = data[7][17]
     dose['calibration_Co_57'] = data[7][18]
@@ -151,11 +191,27 @@ for file in pathList:
 
     #creates JSON file of specified data
     j = json.dumps(dose)
-    print(j)
-    with open('Dose_Info.json', 'w') as f:
-        f.write(j)
+    
+    #Saves JSON files to 1 specified directory
+    if specPath == True:
+        completeName = os.path.join(spec, dirNameList[c] + '_' + fnameList[c] + '.json')
+        with open(completeName, 'w') as f:
+            f.write(j)
 
-    #  C:\Users\strike\Desktop\project2
+    #Saves JSON files to different locations
+    elif indivPath == True:
+        indiv = input('Enter save path for JSON save for the current Dose_info.xls file')
+        completeName = os.path.join(indiv, dirNameList[c] + '_' + fnameList[c] + '.json')
+        with open(completeName, 'w') as f:
+            f.write(j)
+
+    #Default, saves to original xls file location
+    else:
+        completeName = os.path.join(dirList[c], dirNameList[c] + '_' + fnameList[c] + '.json')
+        with open(completeName, 'w') as f:
+            f.write(j)
+
     # saves modified data to csv file
-    writefile = pd.DataFrame(data)
-    writefile.to_csv('Dost_Info_mod.csv', index=False, na_rep='NULL')
+    # writefile = pd.DataFrame(data)
+    # writefile.to_csv('Dost_Info_mod.csv', index=False, na_rep='NULL')
+    c += 1
