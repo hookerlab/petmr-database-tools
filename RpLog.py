@@ -105,12 +105,14 @@ def dateconv(date):
     formtype = ['%m/%d/%y', '%m/%d/%Y']
     for f in formtype:
         try:
-            dt = pd.datetime.strptime(data['Date'][date], f)
+            # dt = pd.datetime.strptime(data['Date'][date], f)
+            dt = pd.datetime.strptime(data['Date'][date], f).date()
             break
         except ValueError:
             pass
-    return str('{0}-{1}-{2}'.format(dt.year, dt.month, dt.day % 100))
-
+    # return str('{0}-{1}-{2}'.format(dt.year, dt.month, dt.day % 100))
+    return str(dt)
+    
 # Reformats all the rows in dates to yyyy-mm-dd by calling dateconv()
 x = 0
 while x < num_rows:
