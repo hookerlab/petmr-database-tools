@@ -1,4 +1,4 @@
-# Project-Radiopharm_Log
+# petmr-database-tools
 Used Python 3.4.3, Pandas 0.16.2
 
 RpLog.py does:
