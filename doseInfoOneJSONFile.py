@@ -6,7 +6,6 @@ import re
 
 __author__ = 'jphan'
 
-#  C:\Users\strike\Desktop\project2
 #Gets starting directory to find dose_info.xls files
 pathname = input('Enter Path to files')
 pathList = []
@@ -16,7 +15,6 @@ fnameList = []
 for dirName, subdirList, fileList in os.walk(pathname):
     currdir = os.path.basename(dirName)
     for fname in fileList:
-        #if 'Dose_info' in fname:
         if 'Dose_info.xls' in fname:
             pathList.append(os.path.join(dirName, fname))
             dirList.append(dirName)
@@ -93,7 +91,6 @@ while c < len(pathList):
                 data.ix[time_row_list[counter], time_col_list[counter]] = timeconv(time_col_list[counter], time_row_list[counter])
                 counter += 1
             except ValueError:
-                # print(counter)
                 if counter not in errList:
                     errList.append(counter)
                 counter += 1
@@ -175,6 +172,3 @@ savePath = input('Enter save directory path: ')
 completeName = os.path.join(savePath, 'Dose_info.json')
 with open(completeName, 'w') as f:
     f.write(j)
-    
-#  C:\Users\strike\Desktop\project2
-#  C:\Users\strike\Desktop\asdf
