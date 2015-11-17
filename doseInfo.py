@@ -6,7 +6,7 @@ import re
 
 __author__ = 'jphan'
 
-#  C:\Users\strike\Desktop\project2
+#Gets starting directory to find dose_info.xls files
 pathname = input('Enter Path to files')
 pathList = []
 dirList = []
@@ -22,7 +22,7 @@ for dirName, subdirList, fileList in os.walk(pathname):
             dirNameList.append(currdir)
             nam = os.path.splitext(fname)[0]
             fnameList.append(nam)
-            
+
 #list of indexes with errors
 errList = []
 
@@ -66,6 +66,7 @@ while True:
         secArg = input('Input must be either "yes" or "no", enter again ')
         secArg = secArg.lower()
 
+#asks user if they want to save JSON files to the same directory or different depending on the xls file
 if secArg == 'yes':
     secArgCheck = input('Are the save paths for each Dose_info.xls file the same location? Enter "yes" or "no" ')
     secArgCheck = secArgCheck.lower()
@@ -76,6 +77,7 @@ if secArg == 'yes':
             secArgCheck = input('Input must be either "yes" or "no", enter again ')
             secArgCheck = secArgCheck.lower()
 
+#boolean checks if user wants to save all JSON to 1 directory or save each xls file to specific directories
 specPath = False
 indivPath = False
 spec = ''
@@ -85,11 +87,11 @@ if secArg == 'yes':
         specPath = True
     elif secArgCheck == 'no':
         indivPath = True
-        
+
 c = 0
 while c < len(pathList):
     # reads in excel file path from list
-    data = pd.read_excel(file, header=None)
+    data = pd.read_excel(pathList[c], header=None)
 
     # gets the number of rows
     num_rows = len(data)
@@ -147,7 +149,7 @@ while c < len(pathList):
         count += 1
     data.loc[len(data)] = newrow
 
-    #checks if blood pressure is a valid value
+    #checks if blood pressure has a number
     def hasNumbers(inputString):
         """
         Parameter:
@@ -191,7 +193,7 @@ while c < len(pathList):
 
     #creates JSON file of specified data
     j = json.dumps(dose)
-    
+
     #Saves JSON files to 1 specified directory
     if specPath == True:
         completeName = os.path.join(spec, dirNameList[c] + '_' + fnameList[c] + '.json')
@@ -200,7 +202,7 @@ while c < len(pathList):
 
     #Saves JSON files to different locations
     elif indivPath == True:
-        indiv = input('Enter save path for JSON save for the current Dose_info.xls file')
+        indiv = input('Enter save path for JSON save for: ' + pathList[c] + ' ')
         completeName = os.path.join(indiv, dirNameList[c] + '_' + fnameList[c] + '.json')
         with open(completeName, 'w') as f:
             f.write(j)
@@ -213,5 +215,5 @@ while c < len(pathList):
 
     # saves modified data to csv file
     # writefile = pd.DataFrame(data)
-    # writefile.to_csv('Dost_Info_mod.csv', index=False, na_rep='NULL')
+    # writefile.to_csv('Dose_Info_mod.csv', index=False, na_rep='NULL')
     c += 1
