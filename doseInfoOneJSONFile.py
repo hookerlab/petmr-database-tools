@@ -134,6 +134,11 @@ while c < len(pathList):
     #changes the value of blood pressure to 'NULL' if invalid value
     if hasNumbers(data[7][13]) == False:
         data.ix[13, 7] = 'NULL'
+        
+    #reformats date to yyyy-mm-dd !!!!not JSON serializable, convert in ____next script when joining the files_____
+    # date = str(data[9][13])
+    # dt = pd.datetime.strptime(date, '%Y%m%d').date()
+    # data.ix[13, 9] = dt
 
     #gathers specified data
     dose = OrderedDict()
