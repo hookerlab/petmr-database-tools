@@ -15,8 +15,8 @@ fnameList = []
 for dirName, subdirList, fileList in os.walk(pathname):
     currdir = os.path.basename(dirName)
     for fname in fileList:
-        if 'Dose_info' in fname:
-        # if 'Dose_info.xls' in fname:
+        #if 'Dose_info' in fname:
+        if 'Dose_info.xls' in fname:
             pathList.append(os.path.join(dirName, fname))
             dirList.append(dirName)
             dirNameList.append(currdir)
