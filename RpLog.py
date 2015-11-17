@@ -1,5 +1,6 @@
 import pandas as pd
 import json
+import os
 
 __author__ = 'jphan'
 """
@@ -13,8 +14,6 @@ Outputs:
 # reads in excel file path
 filename = input('Enter Path to file')
 data = pd.read_csv(filename)
-# data = pd.read_csv("RADIOPHARM log - Summary.csv")
-#C:\Users\strike\Desktop\project\RADIOPHARM log - Summary.csv
 
 # gets the number of rows
 num_rows = len(data)
@@ -24,7 +23,6 @@ errList = []
 
 # title row
 print("Total rows: {}".format(num_rows))
-print(list(data))
 
 # renaming Columns
 data.rename(columns={' ': 'Date'}, inplace=True)
@@ -39,7 +37,6 @@ data.rename(columns={'C11/F18\nproduction': 'C11/F18 Production'}, inplace=True)
 data.rename(columns={'Image\nAnalysis': 'Image Analysis'}, inplace=True)
 data.rename(columns={'Blood\nAnalysis': 'Blood Analysis'}, inplace=True)
 data.rename(columns={'Unnamed: 17': 'Comments'}, inplace=True)
-print(list(data))
 
 # changes all data in column to lowercase
 data['SUBJECT'] = data['SUBJECT'].str.lower()
@@ -282,8 +279,8 @@ data = data.drop(['STUDY', 'PI'], axis=1)
 data = data.drop(data.columns[16:], axis=1)
 
 # saves modified data to csv file
-writefile = pd.DataFrame(data)
-writefile.to_csv('RADIOPHARM log - Summary_edited.csv', index=False, na_rep='NULL')
+# writefile = pd.DataFrame(data)
+# writefile.to_csv('RADIOPHARM log - Summary_edited.csv', index=False, na_rep='NULL')
 
 #creates JSON file of data
 #with index as key
@@ -292,14 +289,15 @@ myJSON = data.to_json(path_or_buf=None, orient='index', date_format='epoch', dou
 #without index as key
 # myJSON = data.to_json(path_or_buf=None, orient='records', date_format='epoch', double_precision=10, force_ascii=True,
 #                       date_unit='ms', default_handler=None)
-                      
-print(myJSON)
-with open('RadioPharmLog.json', 'w') as outfile:
+
+savePath = input('Enter save directory path: ')
+completeName = os.path.join(savePath, 'RadioPharmLog.json')
+with open(completeName, 'w') as outfile:
     json.dump(myJSON, outfile)
 
 # saves csv file of indexes with data error
 errList.sort()
 print(errList)
-errIndex = pd.DataFrame(errList)
-errIndex.columns = ['Error_Indexes']
-errIndex.to_csv('Indexes_With_Errors.csv', index=False, na_rep='NULL')
+# errIndex = pd.DataFrame(errList)
+# errIndex.columns = ['Error_Indexes']
+# errIndex.to_csv('Indexes_With_Errors.csv', index=False, na_rep='NULL')
