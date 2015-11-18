@@ -8,6 +8,7 @@ __author__ = 'jphan'
 
 #Gets starting directory to find dose_info.xls files
 pathname = input('Enter Path to files')
+pathname = pathname.strip()
 pathList = []
 dirList = []
 dirNameList = []
@@ -169,6 +170,7 @@ j = json.dumps(doseList)
 
 #Saves JSON files to 1 specified directory
 savePath = input('Enter save directory path: ')
+savePath = savePath.strip()
 completeName = os.path.join(savePath, 'Dose_info.json')
 with open(completeName, 'w') as f:
     f.write(j)
