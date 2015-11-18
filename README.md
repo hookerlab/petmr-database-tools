@@ -30,3 +30,24 @@ RpLog.py does:
   -JSON file of the data
     
   -CSV file with indexes of columns that has errors
+  
+doseInfoOneJSONFile.py does:
+1.Recieves input from user for starting directory to create a list of paths to all Dose_info.xls files
+
+2.For each xls file,
+  
+  -fill empty cells with 'NULL'
+  
+  -Check + modify any value with a time to 24hr format
+  
+  -Concatenates quant_param values into 1 cell
+  
+  -creates empty row at the bottom
+    -Reason: Allows the script to access the 'Calibration Time' value. If there is no value for 'Calibration Time', pyhton reads the number of rows as 24 giving an error when trying to access that cell, while xls files with a 'Calibration Time' will have 25 rows.
+    
+  -Check if 'Blood Pressure' has a valid value
+  
+3.Gathers specified data into an ordered dictionary
+
+4.Creates JSON file contain objects for all found 'Dose_info.xls' files 
+
