@@ -1,7 +1,7 @@
 # petmr-database-tools
 Used Python 3.4.3, Pandas 0.16.2
 
-RpLog.py does:
+##RpLog.py does:
 
 1.Renames columns to have meaningful names and avoid returns(\n, next line)
 
@@ -31,7 +31,7 @@ RpLog.py does:
     
   -CSV file with indexes of columns that has errors
   
-doseInfoOneJSONFile.py does:
+## doseInfoOneJSONFile.py does:
 1.Recieves input from user for starting directory to create a list of paths to all Dose_info.xls files
 
 2.For each xls file,
