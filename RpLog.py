@@ -13,7 +13,7 @@ Outputs:
 """
 
 # reads in excel file path
-filename = input('Enter Path to file')
+filename = input('Enter Path to file: ')
 filename = filename.strip()
 data = pd.read_csv(filename)
 
@@ -22,9 +22,6 @@ num_rows = len(data)
 
 # holds a list of indexes with time formatting errors
 errList = []
-
-# title row
-print("Total rows: {}".format(num_rows))
 
 # renaming Columns
 data.rename(columns={' ': 'Date'}, inplace=True)
