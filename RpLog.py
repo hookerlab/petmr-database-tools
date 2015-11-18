@@ -14,6 +14,7 @@ Outputs:
 
 # reads in excel file path
 filename = input('Enter Path to file')
+filename = filename.strip()
 data = pd.read_csv(filename)
 
 # gets the number of rows
@@ -306,6 +307,7 @@ while count < num_rows:
 
 j = json.dumps(rpList)
 savePath = input('Enter save directory path: ')
+savePath = savePath.strip()
 completeName = os.path.join(savePath, 'RadioPharmLog.json')
 with open(completeName, 'w') as f:
     f.write(j)
