@@ -1,6 +1,7 @@
 import pandas as pd
 import json
 import os
+from collections import OrderedDict
 
 __author__ = 'jphan'
 """
@@ -278,22 +279,36 @@ for x in data['MANUF.']:
 data = data.drop(['STUDY', 'PI'], axis=1)
 data = data.drop(data.columns[16:], axis=1)
 
+#creates dictionary to save as JSON object
+rpList = []
+fieldnames = ("Date", "SUBJECT", "ID", "MANUF.", "Rx#", "Initial (mCi)", 'Initial Time', 'Residual (mCi)',
+              'Residual Time', 'Injection Time', 'Used (mCi)', 'Tracer Admin', 'C11/F18 Production', 'Image Analysis',
+              'Blood Analysis', 'Comments')
+count = 0
+while count < num_rows:
+    rp = OrderedDict()
+    for f in fieldnames:
+        rp[f] = data[f][count]
+    rpList.append(rp)
+    count += 1
+
 # saves modified data to csv file
 # writefile = pd.DataFrame(data)
 # writefile.to_csv('RADIOPHARM log - Summary_edited.csv', index=False, na_rep='NULL')
 
 #creates JSON file of data
 #with index as key
-myJSON = data.to_json(path_or_buf=None, orient='index', date_format='epoch', double_precision=10, force_ascii=True,
-                      date_unit='ms', default_handler=None)
+# myJSON = data.to_json(path_or_buf=None, orient='index', date_format='epoch', double_precision=10, force_ascii=True,
+#                       date_unit='ms', default_handler=None)
 #without index as key
 # myJSON = data.to_json(path_or_buf=None, orient='records', date_format='epoch', double_precision=10, force_ascii=True,
 #                       date_unit='ms', default_handler=None)
 
+j = json.dumps(rpList)
 savePath = input('Enter save directory path: ')
 completeName = os.path.join(savePath, 'RadioPharmLog.json')
-with open(completeName, 'w') as outfile:
-    json.dump(myJSON, outfile)
+with open(completeName, 'w') as f:
+    f.write(j)
 
 # saves csv file of indexes with data error
 errList.sort()
