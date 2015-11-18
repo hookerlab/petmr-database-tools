@@ -101,19 +101,20 @@ while c < len(pathList):
     #creates string to hold quant_param values
     quant_param = []
     num = 1
-    boo = False
-    while num < 5:
-        if boo == False:
-            data.ix[1, 1] = str(data[num][0])
-            boo = True
-        else:
-            data.ix[1, 1] += ', ' + str(data[num][0])
-        num += 1
-    #creates list !!!!! changed to string to make correctly formatted dataframe in jsonMerge.py
+    # boo = False
+    #create string
     # while num < 5:
-    #     quant_param.append(data[num][0])
+    #     if boo == False:
+    #         data.ix[1, 1] = str(data[num][0])
+    #         boo = True
+    #     else:
+    #         data.ix[1, 1] += ', ' + str(data[num][0])
     #     num += 1
-    # data.set_value(1, 1, quant_param)
+    #creates list 
+    while num < 5:
+        quant_param.append(data[num][0])
+        num += 1
+    data.set_value(1, 1, quant_param)
 
     #creates a new empty row at the end
     newrow = []
