@@ -215,17 +215,28 @@ uni_int.sort()
 uni_res = findUni(list_res)
 uni_res.sort()
 
-# concatenates the extra comments for columns 18 to 34
+# concatenates the extra comments for columns 18 to 34 into an array
 comm_loc = data.columns.get_loc("Comments")
 temp = 0
 while temp < num_rows:
+    commList = []
+    boo = False
     for col in data.ix[:, comm_loc + 1:]:
         if data['Comments'][temp] != 'NULL':
+            if boo is False:
+                commList.append(data['Comments'][temp])
+                boo = True
             if data[col][temp] != 'NULL':
-                data.ix[temp, 'Comments'] += ', "' + str(data[col][temp]) + '"'
+                commList.append(data[col][temp])
+                data.ix[temp, col] = 'NULL'
         else:
             if data[col][temp] != 'NULL':
-                data.ix[temp, 'Comments'] = '"' + str(data[col][temp]) + '"'
+                commList.append(data[col][temp])
+                data.ix[temp, col] = 'NULL'
+    if not commList:
+        data.set_value(temp, 'Comments', 'NULL')
+    else:
+        data.set_value(temp, 'Comments', commList)
     temp += 1
 
 def commInit(colName, row):
@@ -236,13 +247,20 @@ def commInit(colName, row):
     row: int
         Current row
     """
+    #array
     if data[colName][row] != 'NULL':
+        commList2 = []
         if data['Comments'][row] == 'NULL':
-            data.ix[row, 'Comments'] = '"' + data[colName][row] + '"'
+            commList2.append(data[colName][row])
             data.ix[row, colName] = 'NULL'
         else:
-            data.ix[row, 'Comments'] += ', "' + data[colName][row] + '"'
+            commList2 = list(data['Comments'][row])
+            commList2.append(data[colName][row])
             data.ix[row, colName] = 'NULL'
+        if not commList2:
+            data.set_value(row, 'Comments', 'NULL')
+        else:
+            data.set_value(row, 'Comments', commList2)
 
 def commMove(colName, uni_list):
     """ moves unrelated data to comments column
