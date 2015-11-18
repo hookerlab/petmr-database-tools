@@ -5,7 +5,11 @@ from collections import OrderedDict
 import re
 
 __author__ = 'jphan'
-
+'''
+Manipulates 'Dose_info.xls' data to required format
+Outputs:
+-JSON file of data
+'''
 #Gets starting directory to find dose_info.xls files
 pathname = input('Enter Path to files')
 pathname = pathname.strip()
