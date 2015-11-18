@@ -324,6 +324,7 @@ j = json.dumps(rpList)
 savePath = input('Enter save directory path: ')
 savePath = savePath.strip()
 completeName = os.path.join(savePath, 'RadioPharmLog.json')
+print('Saving: ' + completeName)
 with open(completeName, 'w') as f:
     f.write(j)
 
