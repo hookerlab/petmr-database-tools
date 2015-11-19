@@ -11,8 +11,12 @@ Outputs:
 -JSON file of data
 '''
 #Gets starting directory to find dose_info.xls files
-pathname = input('Enter Path to files')
-pathname = pathname.strip()
+total = len(sys.argv)
+if total == 2:
+    pathname = str(sys.argv[1]).strip()
+else:
+    pathname = input('Enter Path to files: ')
+    pathname = pathname.strip()
 pathList = []
 dirList = []
 dirNameList = []
