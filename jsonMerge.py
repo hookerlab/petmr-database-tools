@@ -37,5 +37,61 @@ data_dose = pd.read_json(inp_dose)
 num_rowsRp = len(data_rp)
 num_rowsDose = len(data_dose)
 
+#Creates new 'NULL' columns in radiopharm dataframe with column names of dose_info columns
+for col in data_dose:
+    data_rp[col] = 'NULL'
+    
+def dateconv(date):
+    """ converts date mm/dd/yyyy to yyyy-mm-dd
+    Parameters:
+    date: String
+        String of date of the current row in the 'Date' column
+    Returns:
+    Out: String
+        Returns reformatted date yyyy-mm-dd
+    """
+    formtype = ['%Y%m%d', '%Y-%m-%d']
+    for f in formtype:
+        try:
+            # dt = pd.datetime.strptime(data['Date'][date], f)
+            dt = pd.datetime.strptime(str(data_dose['scan date(YYYYMMDD)'][date]), f).date()
+            break
+        except ValueError:
+            pass
+    # return str('{0}-{1}-{2}'.format(dt.year, dt.month, dt.day % 100))
+    return str(dt)
+    
+#convert dose_info date to date format
+row = 0
+while row < num_rowsDose:
+    data_dose.ix[row, 'scan date(YYYYMMDD)'] = dateconv(row)
+    row += 1
+    
+'''
+Year - Rows
+2010 - 1-13
+2011 - 14-56
+2012 - 57-267
+2013 - 268-576
+2014 - 577-905
+2015 - 906-num_rowsRp
+'''
+#Merge files based on Date and Time checks
+row_dose = 0
+row_rp = 0
+while row_dose < num_rowsDose:
+    while row_rp < num_rowsRp:
+        if (str(data_dose['scan date(YYYYMMDD)'][row_dose]) == str(data_rp['Date'][row_rp].date()) and
+                data_dose['series time'][row_dose] == data_rp['Injection Time'][row_rp]):
+            for col in data_dose:
+                if not col == 'quant_param':
+                    data_rp.ix[row_rp, col] = data_dose[col][row_dose]
+                else:
+                    data_rp.set_value(row_rp, col, data_dose[col][row_dose])
+            break
+        row_rp += 1
+    row_dose += 1
+    
+
 
 
