@@ -42,7 +42,8 @@ for col in data_dose:
     data_rp[col] = 'NULL'
 #creates new column in dose_info for ID
 data_dose['ID'] = 'NULL'
-    
+data_dose['Row Index'] = 'NULL'
+
 def dateconv(date):
     """ converts date mm/dd/yyyy to yyyy-mm-dd
     Parameters:
@@ -83,9 +84,12 @@ def loopMerge(dose_row, start, end):
         if (str(data_dose['scan date(YYYYMMDD)'][dose_row]) == str(data_rp['Date'][start].date()) and
                 data_dose['series time'][dose_row] == data_rp['Injection Time'][start]):
             data_dose.ix[dose_row, 'ID'] = data_rp['ID'][start]
+            data_dose.ix[dose_row, 'Row Index'] = int(start)
             for cols in data_dose:
-                if not cols == 'quant_param':
-                    data_rp.ix[start, cols] = data_dose[cols][dose_row]
+                if cols != 'quant_param':
+                    if cols != 'ID':
+                        if cols != 'Row Index':
+                            data_rp.ix[start, cols] = data_dose[cols][dose_row]
                 else:
                     data_rp.set_value(start, cols, data_dose[cols][dose_row])
             break
