@@ -8,7 +8,8 @@ __author__ = 'jphan'
 '''
 Merges RadioPharmLog.json and Dose_info.json
 Outputs:
--Merged JSON file
+-Merged JSON files
+-Modified JSON dose_info_with_ID
 '''
 
 '''
