@@ -1,11 +1,11 @@
-""" doseInfo1jsonFile.py
+""" doseInfoOneJSONFile.py
 
     Usage:
-        doseInfo1jsonFile.py
-        doseInfo1jsonFile.py [<Dose_info_Path>]
+        doseInfoOneJSONFile.py
+        doseInfoOneJSONFile.py [<Dose_info_Path>]
 
     Options:
-        Dose_info_Path      : Path to Dose_info.json
+        Dose_info_Path      : Path to Dose_info.xls
 """
 from docopt import docopt
 import pandas as pd
