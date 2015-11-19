@@ -25,11 +25,7 @@ Used Python 3.4.3, Pandas 0.16.2
 
 11.Creates:
 
-  -CSV file of edited columns/data
-    
   -JSON file of the data
-    
-  -CSV file with indexes of columns that has errors
   
 ## doseInfoOneJSONFile.py does:
 1.Recieves input from user for starting directory to create a list of paths to all Dose_info.xls files
