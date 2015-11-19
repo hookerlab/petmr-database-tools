@@ -59,7 +59,7 @@ def dateconv(date):
         except ValueError:
             pass
     # return str('{0}-{1}-{2}'.format(dt.year, dt.month, dt.day % 100))
-    return str(dt)
+    return dt
     
 #convert dose_info date to date format
 row = 0
@@ -67,29 +67,53 @@ while row < num_rowsDose:
     data_dose.ix[row, 'scan date(YYYYMMDD)'] = dateconv(row)
     row += 1
     
+def loopMerge(dose_row, start, end):
+    """
+    Parameters:
+    dose_row: int
+        Current row in dose_info.json file
+    start: int
+        Lower bound for range of current dose_info year
+    end: int
+        Upper bound for range of current dose_info year
+    """
+    while start <= end:
+        if (str(data_dose['scan date(YYYYMMDD)'][dose_row]) == str(data_rp['Date'][start].date()) and
+                data_dose['series time'][dose_row] == data_rp['Injection Time'][start]):
+            for cols in data_dose:
+                if not cols == 'quant_param':
+                    data_rp.ix[start, cols] = data_dose[cols][dose_row]
+                else:
+                    data_rp.set_value(start, cols, data_dose[cols][dose_row])
+            break
+        start += 1
+
 '''
 Year - Rows
-2010 - 1-13
-2011 - 14-56
-2012 - 57-267
-2013 - 268-576
-2014 - 577-905
-2015 - 906-num_rowsRp
+2010 - 0-12
+2011 - 13-55
+2012 - 56-266
+2013 - 267-575
+2014 - 576-904
+2015 - 905-(num_rowsRp-1)
 '''
 #Merge files based on Date and Time checks
 row_dose = 0
-row_rp = 0
 while row_dose < num_rowsDose:
-    while row_rp < num_rowsRp:
-        if (str(data_dose['scan date(YYYYMMDD)'][row_dose]) == str(data_rp['Date'][row_rp].date()) and
-                data_dose['series time'][row_dose] == data_rp['Injection Time'][row_rp]):
-            for col in data_dose:
-                if not col == 'quant_param':
-                    data_rp.ix[row_rp, col] = data_dose[col][row_dose]
-                else:
-                    data_rp.set_value(row_rp, col, data_dose[col][row_dose])
-            break
-        row_rp += 1
+    if data_dose['scan date(YYYYMMDD)'][row_dose].year == 2010:
+        loopMerge(row_dose, 0, 12)
+    elif data_dose['scan date(YYYYMMDD)'][row_dose].year == 2011:
+        loopMerge(row_dose, 13, 55)
+    elif data_dose['scan date(YYYYMMDD)'][row_dose].year == 2012:
+        loopMerge(row_dose, 56, 266)
+    elif data_dose['scan date(YYYYMMDD)'][row_dose].year == 2013:
+        loopMerge(row_dose, 267, 575)
+    elif data_dose['scan date(YYYYMMDD)'][row_dose].year == 2014:
+        loopMerge(row_dose, 576, 904)
+    elif data_dose['scan date(YYYYMMDD)'][row_dose].year == 2015:
+        loopMerge(row_dose, 905, 1173)
+    else:
+        loopMerge(row_dose, 1174, (num_rowsRp - 1))
     row_dose += 1
     
 
