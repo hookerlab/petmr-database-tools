@@ -51,3 +51,17 @@ Used Python 3.4.3, Pandas 0.16.2
 
 4.Creates JSON file contain objects for all found 'Dose_info.xls' files 
 
+##  jsonMerge.py does:
+1.Recieves input from user for the path to RadioPharmLog.json and Dose_info.json
+
+2.Adds all columns of both json files to a dataframe
+
+3.Compares Date and TOI to match data from each json file
+
+4.Outputs 2 json files
+  
+  -merged.json - json objects of the merged data
+  
+  -Dose_info_with_ID - json objects of dose_info with ID's for each object
+
+
