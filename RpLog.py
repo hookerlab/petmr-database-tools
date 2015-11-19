@@ -2,6 +2,7 @@ import pandas as pd
 import json
 import os
 from collections import OrderedDict
+import sys
 
 __author__ = 'jphan'
 """
@@ -13,8 +14,12 @@ Outputs:
 """
 
 # reads in excel file path
-filename = input('Enter Path to file: ')
-filename = filename.strip()
+total = len(sys.argv)
+if total == 2:
+    filename = str(sys.argv[1]).strip()
+else:
+    filename = input('Enter Path to file: ')
+    filename = filename.strip()
 data = pd.read_csv(filename)
 
 # gets the number of rows
