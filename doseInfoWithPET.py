@@ -198,7 +198,7 @@ if __name__ == "__main__":
         dose['reconstruction time'] = data[9][19]
         dose['calibration date'] = data[9][22]
         dose['calibration time'] = data[9][25]
-        dose['pet path'] = pathListPET
+        dose['frame'] = pathListPET
         dose['md5sum'] = md5sumList
         doseList.append(dose)
         c += 1
