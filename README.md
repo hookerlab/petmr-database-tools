@@ -60,4 +60,5 @@ Used Python 3.4.3, Pandas 0.16.2, docopt 0.6.2
   
   -Dose_info_with_ID - json objects of dose_info with ID's for each object
 
-
+##  doseInfoWithPET.py does:
+Same as doseInfoOneJSONFile.py but also finds corresponding PET files
