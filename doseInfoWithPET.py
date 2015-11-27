@@ -63,6 +63,20 @@ if __name__ == "__main__":
             pathListPETset = []
             md5sumListSet = []
 
+    #merge frame path and frame md5sum
+    petframe = []
+    temp = []
+    count = 0
+    while count < len(pathListPET):
+        count2 = 0
+        while count2 < len(pathListPET[count]):
+            temp.append(pathListPET[count][count2])
+            temp.append(md5sumList[count][count2])
+            petframe.append(temp)
+            temp = []
+            count2 += 1
+        count += 1
+
     #list of indexes with errors
     errList = []
 
@@ -200,6 +214,7 @@ if __name__ == "__main__":
         dose['calibration time'] = data[9][25]
         dose['frame'] = pathListPET
         dose['md5sum'] = md5sumList
+        dose['pet'] = petframe
         doseList.append(dose)
         c += 1
 
